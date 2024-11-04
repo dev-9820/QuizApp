@@ -10,10 +10,10 @@ const dotenv = require('dotenv');
 dotenv.config(); // Load environment variables
 
 const transporter = nodemailer.createTransport({
-  service: 'Gmail', // Change to your email service provider
+  service: 'gmail', // Change to your email service provider
   auth: {
-    user: process.env.EMAIL,
-    pass: process.env.EMAIL_PASSWORD,
+    user: 'yourquizscore@gmail.com',
+    pass: 'abme otcu emzj dael',
   },
 });
 
@@ -63,11 +63,9 @@ exports.submitScore = async (req, res) => {
   const { quizId, score } = req.body;
 
   try {
-    // Find the user by ID
     const user = await User.findById(req.userId);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    // Find the quiz to retrieve the title
     const quiz = await Quiz.findById(quizId);
     if (!quiz) return res.status(404).json({ message: 'Quiz not found' });
 
@@ -75,23 +73,26 @@ exports.submitScore = async (req, res) => {
     user.scores.push({ quizId, score });
     await user.save();
 
-    // Send result email to the user
+    // Send response to avoid double response issue
+    res.json({ message: 'Score submitted successfully', score });
+
+    // Email options
     const mailOptions = {
       from: process.env.EMAIL,
       to: user.email,
       subject: `Your Quiz Result for "${quiz.title}"`,
-      text: `Hello ${user.username},\n\nYou completed the quiz "${quiz.title}" and scored ${score} points!\n\nCongratulations!\n\nBest regards,\nQuizApp Team`,
+      text: `Hello ${user.username},\n\nYou completed the quiz "${quiz.title}" and scored ${score} points!\n\nBest regards,\nQuizApp Team`,
     };
 
+    // Send email, but without awaiting response
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.error('Error sending email:', error);
-        return res.status(500).json({ message: 'Error sending result email', error });
+      } else {
+        console.log('Email sent:', info.response);
       }
-      console.log('Email sent:', info.response);
     });
 
-    res.json({ message: 'Score submitted and result emailed successfully', score });
   } catch (error) {
     console.error('Error submitting score:', error);
     res.status(500).json({ message: 'Error submitting score', error });
