@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaTrophy, FaChevronDown } from 'react-icons/fa'; // Icons for leaderboard
 import Navbar from '../components/Navbar';
 import AdminNavbar from '../components/AdminNavbar'
-const Leaderboard = () => {
+const AdminLeaderboard = () => {
   const [quizzes, setQuizzes] = useState([]);
   const [leaderboards, setLeaderboards] = useState({});
   const [expandedQuiz, setExpandedQuiz] = useState(null); // Track which quiz is expanded
@@ -52,7 +52,7 @@ const Leaderboard = () => {
   return (
     <div>
       
-      <Navbar />
+      <AdminNavbar />
       
       <div className="p-8 bg-gradient-to-br from-blue-100 to-blue-300 min-h-screen">
         <h1 className="text-4xl font-extrabold text-gray-800 text-center mb-10">Leaderboard</h1>
@@ -101,4 +101,4 @@ const Leaderboard = () => {
   );
 };
 
-export default Leaderboard;
+export default AdminLeaderboard;

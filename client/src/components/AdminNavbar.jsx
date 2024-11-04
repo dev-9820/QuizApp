@@ -32,7 +32,7 @@ const AdminNavbar = () => {
             <FaHome className="mr-2" /> Home
           </Link>
           <Link
-            to="/leaderboard"
+            to="/admin/leaderboard"
             className="text-white hover:bg-blue-500 rounded px-3 py-2 transition duration-300 flex items-center"
           >
             <FaTrophy className="mr-2" /> Leaderboard
@@ -53,12 +53,7 @@ const AdminNavbar = () => {
                 onMouseEnter={() => toggleDropdown(true)}
                 onMouseLeave={() => toggleDropdown(false)}
               >
-                <Link
-                  to="/profile"
-                  className="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 transition-colors duration-200"
-                >
-                  Profile
-                </Link>
+                
                 <button
                   onClick={handleLogout}
                   className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 transition-colors duration-200"

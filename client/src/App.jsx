@@ -14,6 +14,7 @@ import './App.css'
 import UserProfile from "./pages/UserProfile";
 import EditQuiz from './pages/EditQuiz'
 import Leaderboard from './pages/Leaderboard'
+import AdminLeaderboard from "./pages/AdminLeaderboard";
 
 const App = () => {
   return (
@@ -27,7 +28,7 @@ const App = () => {
         <Route path="/dashboard" element={<UserDashboard />} />
         <Route path="/leaderboard" element={<Leaderboard/>}/>
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
-       
+        <Route path="/admin/leaderboard" element={<AdminLeaderboard/>}/>
         <Route path="/admin/create-quiz" element={<QuizForm />} /> {/* Route for creating a quiz */}
         <Route path="/quiz/:id" element={<QuizAttempt />} />
         <Route path="/admin/edit-quiz/:id" element={<EditQuiz />} /> {/* Edit Quiz page */}
