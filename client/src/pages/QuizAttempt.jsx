@@ -56,7 +56,7 @@ const QuizAttempt = () => {
   }, [isSubmitted]); // Dependency only on isSubmitted
 
   const handleAnswerChange = (questionId, value) => {
-    setAnswers({ ...answers, [questionId]: value });
+    setAnswers((prevAnswers) => ({ ...prevAnswers, [questionId]: value }));
   };
 
   const handleScoreCalculation = () => {
@@ -127,6 +127,7 @@ const QuizAttempt = () => {
               name={`question-${currentQuestionIndex}`}
               value={option}
               onChange={() => handleAnswerChange(currentQuestion._id, option)}
+              checked={answers[currentQuestion._id] === option} // Set checked based on current answer
               className="mr-2"
             />
             <label className="text-lg">{option}</label>
