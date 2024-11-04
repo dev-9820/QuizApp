@@ -83,7 +83,10 @@ const Leaderboard = () => {
                     <ul className="mt-4">
                       {leaderboards[quiz._id].map((entry, index) => (
                         <li key={index} className="flex justify-between py-2 border-b border-gray-300">
+                          <div className="flex gap-10">
+                           <p className="font-bold text-xl"> {index+1}</p>
                           <span className="font-semibold">{entry.username}</span>
+                          </div>
                           <span className="text-blue-600">{entry.score}</span>
                         </li>
                       ))}

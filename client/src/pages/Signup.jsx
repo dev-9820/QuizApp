@@ -1,4 +1,3 @@
-// client/src/pages/Signup.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -9,10 +8,18 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('user'); // Default role
+  const [error, setError] = useState(''); // State for displaying error messages
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
+
+    // Check if email ends with @cvr.ac.in
+    if (!email.endsWith('@cvr.ac.in')) {
+      setError('Only email addresses ending with @cvr.ac.in are allowed.');
+      return;
+    }
+
     try {
       const response = await axios.post('http://localhost:5000/api/signup', {
         username,
@@ -50,11 +57,15 @@ const Signup = () => {
                 type="email"
                 placeholder="Email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setError(''); // Clear error when user types
+                }}
                 required
                 className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
+            {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
             <div className="mb-4">
               <input
                 type="password"

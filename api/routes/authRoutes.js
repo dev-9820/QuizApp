@@ -9,5 +9,4 @@ router.post('/login', login);
 router.post('/score', verifyToken, submitScore);
 router.get('/profile', verifyToken, getProfile);
 
-
 module.exports = router;

@@ -1,9 +1,15 @@
 // server/controllers/quizController.js
 const Quiz = require('../models/Quiz');
 const User = require('../models/User');
+const nodemailer = require('nodemailer');
 
-
-
+const transporter = nodemailer.createTransport({
+  service: 'Gmail', // or use your preferred email service
+  auth: {
+    user: process.env.EMAIL, // Your email
+    pass: process.env.EMAIL_PASSWORD, // Your email password
+  },
+});
 
 // Create a new quiz
 exports.createQuiz = async (req, res) => {
@@ -16,6 +22,58 @@ exports.createQuiz = async (req, res) => {
     res.status(400).json({ message: 'Error creating quiz', error });
   }
 };
+
+
+
+
+exports.submitQuiz = async (req, res) => {
+  const { quizId, score } = req.body;
+  const userId = req.userId; // Get userId from JWT middleware
+
+  try {
+    // Find the quiz by ID
+    const quiz = await Quiz.findById(quizId);
+    if (!quiz) return res.status(404).json({ message: 'Quiz not found' });
+
+    // Update user's score for this quiz
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    // Update or add score entry for the quiz
+    const scoreEntryIndex = user.scores.findIndex(s => s.quizId.toString() === quizId);
+    if (scoreEntryIndex >= 0) {
+      user.scores[scoreEntryIndex].score = score;
+    } else {
+      user.scores.push({ quizId, score });
+    }
+    await user.save();
+
+    // Send result email to the user
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: user.email,
+      subject: `Your Quiz Result for ${quiz.title}`,
+      text: `Congratulations ${user.username}! You completed the quiz "${quiz.title}" with a score of ${score}.`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending email:', error);
+        return res.status(500).json({ message: 'Error sending result email', error });
+      }
+      console.log('Email sent:', info.response);
+    });
+
+    res.status(201).json({ message: 'Quiz submitted and result emailed successfully' });
+  } catch (error) {
+    console.error('Error submitting quiz:', error);
+    res.status(500).json({ message: 'Error submitting quiz', error });
+  }
+};
+
+
+
+
 
 exports.getLeaderboard = async (req, res) => {
   const { id } = req.params;
